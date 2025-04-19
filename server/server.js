@@ -95,7 +95,7 @@ server.post("/signin", (req, res) => {
             if (!result) {
                 return res.status(403).json({ "status": "Incorrect password" });
             } else {
-                return res.status(200).json(formatDatatoSend(result));
+                return res.status(200).json(formatDatatoSend(user));
             }
         })
 
