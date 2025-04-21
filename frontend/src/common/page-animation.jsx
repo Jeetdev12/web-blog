@@ -6,7 +6,7 @@ const AnimationWrapper = ({ children, keyValue, initial = { opacity: 0 }, animat
 
     return (
         <AnimatePresence>
-            <motion.dev
+            <motion.div
                 key={keyValue}
                 initial={initial}
                 animate={animate}
@@ -14,7 +14,7 @@ const AnimationWrapper = ({ children, keyValue, initial = { opacity: 0 }, animat
                 className={className}
             >
                 {children}
-            </motion.dev>
+            </motion.div>
         </AnimatePresence>
     )
 }
