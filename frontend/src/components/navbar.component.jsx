@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import logo from "../imgs/logo.png";
 import { Link, Outlet } from "react-router-dom";
+import { UserContext } from "../App";
 
 const Navbar = () => {
   const [searchBoxVisibility, setsearchBoxVisibility] = useState(false);
+
+  const { userAuth, userAuth: { access_token, profile_img } } = useContext(UserContext)
 
   return (
     <>
@@ -42,13 +45,31 @@ const Navbar = () => {
           <p>Write</p>
         </Link>
 
-        <Link to={"/signin"} className="btn-dark py-2">
-          Sign In
-        </Link>
+        {
+          access_token ?
+            <>
+              <Link to="/dasboard/notification">
+                <button className="w-12 h-12 rounded-full bg-grey hover:bg-black/10">
+                  <i className="fi fi-rr-bell"></i>
+                </button>
+              </Link>
 
-        <Link to={"/signup"} className="btn-light py-2 hidden md:block">
-          Sign up
-        </Link>
+              <div className="relative">
+                <button className="w-12 h-12 rounded-full mt-1">
+                  <img src={profile_img} className="w-full h-full object-cover rounded-full" />
+                </button>
+              </div>
+            </>
+            :
+            <>
+              <Link to={"/signin"} className="btn-dark py-2">
+                Sign In
+              </Link>
+              <Link to={"/signup"} className="btn-light py-2 hidden md:block">
+                Sign up
+              </Link>
+            </>
+        }
       </nav>
       <Outlet />
     </>
