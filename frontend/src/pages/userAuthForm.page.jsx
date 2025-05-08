@@ -7,11 +7,12 @@ import { Toaster, toast } from "react-hot-toast"
 import axios from "axios";
 import { storeInSession } from "../common/session";
 import { UserContext } from "../App";
+import { authWithGoogle } from "../common/firebase";
 
 
 const UserAuthForm = ({ type }) => {
 
-    const authForm = useRef(null);
+    const authForm = useRef();
 
     let { userAuth: { access_token }, setUserAuth } = useContext(UserContext);
     // console.log(access_token)
@@ -21,12 +22,11 @@ const UserAuthForm = ({ type }) => {
         axios.post(import.meta.env.VITE_SERVER_DOMAIN + serverRoute, formData)
             .then(({ data }) => {
                 storeInSession("user", JSON.stringify(data));
-                setUserAuth(sessionStorage);
+                setUserAuth(data);
             })
             .catch(({ response }) => {
                 toast.error(response.data?.error)
             })
-
     }
 
 
@@ -36,7 +36,7 @@ const UserAuthForm = ({ type }) => {
 
         let serverRoute = type == "sign-in" ? "/signin" : "/signup"
 
-        const form = new FormData(formElement);
+        const form = new FormData(authForm.current);
         let formData = {};
 
         for (let [key, value] of form.entries()) {
@@ -70,13 +70,31 @@ const UserAuthForm = ({ type }) => {
 
     }
 
+    const handleGoogleAuth = (e) => {
+
+        e.preventDefault();
+        authWithGoogle().then((user) => {
+            console.log(user)
+            let serverRoute = "/google-auth";
+
+            let formData = {
+                access_token: user.accessToken
+            }
+
+            userAuthThroughServer(serverRoute, formData);
+        }).catch(err => {
+            toast.error("trouble login through Google ")
+            return console.log(err);
+        })
+    }
+
     return (
         access_token ? <Navigate to="/" />
             :
             <AnimationWrapper keyValue={type}>
                 <section className="h-cover flex items-center justify-center">
                     <Toaster />
-                    <form id="formElement" className="w-[80%] max-w-[400px]" >
+                    <form ref={authForm} id="formElement" className="w-[80%] max-w-[400px]" >
                         <h1 className="text-4xl font-gelasio capitalize text-center  mb-24">
                             {type == "sign-in" ? "Welcome back" : "Join us today"}
                         </h1>
@@ -115,7 +133,7 @@ const UserAuthForm = ({ type }) => {
                             <hr className="w-1/2 border-black" />
                         </div>
 
-                        <button className="btn-dark  flex items-center justify-center gap-4 w-[90%] center">
+                        <button className="btn-dark  flex items-center justify-center gap-4 w-[90%] center" onClick={handleGoogleAuth}>
                             <img src={googleIcon} className="w-5" />
                             Continue with google
                         </button>
