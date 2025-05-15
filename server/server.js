@@ -5,15 +5,15 @@ import 'dotenv/config'
 import bcrypt from 'bcrypt';
 import User from './Schema/User.js';
 import { nanoid } from 'nanoid';
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
 import cors from "cors";
-import { getAuth } from "firebase-admin/auth"
+import { getAuth } from "firebase-admin/auth";
 import admin from 'firebase-admin';
-import serviceAccountKey from "./blog-io-a944e-firebase-adminsdk-fbsvc-677686502c.json" assert {type: "json"}
+import serviceAccountKey from "./blog-io-a944e-firebase-adminsdk-fbsvc-77ab4fa75f.json" assert {type: "json"};
 
 
 const server = express();
-
+console.log("serviceAccountKey", serviceAccountKey);
 let PORT = 3000;
 server.use(express.json());
 server.use(cors());
@@ -141,12 +141,11 @@ server.post("/google-auth", async (req, res) => {
 
             if (user) {
                 if (!user.google_auth) {// it will be for sign in 
-                    return res.status(403).json({ "error": "This email sign up with password .Please login with password to access the account " })
+                    return res.status(403).json({ "error": "This email was signed up with password .Please login with password to access the account " })
                 }
             }
             else { //it will be for sign up 
                 let username = generateUsername(email);
-
 
                 let user = new User({
                     personal_info: { "fullname": name, email, username },
@@ -166,6 +165,8 @@ server.post("/google-auth", async (req, res) => {
             return res.status(500).json({ "error": "failed to authenticate with google . try with other account" })
         })
 })
+
+
 
 server.listen(PORT, () => {
     console.log('listening on port -->' + PORT)
