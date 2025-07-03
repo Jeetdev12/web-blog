@@ -19,14 +19,21 @@ const UserAuthForm = ({ type }) => {
 
     const userAuthThroughServer = (serverRoute, formData) => {
 
-        axios.post(import.meta.env.VITE_SERVER_DOMAIN + serverRoute, formData)
-            .then(({ data }) => {
-                storeInSession("user", JSON.stringify(data));
-                setUserAuth(data);
-            })
-            .catch(({ response }) => {
-                toast.error(response.data?.error)
-            })
+        try {
+            console.log("Backend URL:", import.meta.env.VITE_SERVER_DOMAIN);
+            axios.post(import.meta.env.VITE_SERVER_DOMAIN + serverRoute, formData)
+                .then(({ data }) => {
+                    storeInSession("user", JSON.stringify(data));
+                    setUserAuth(data);
+                    console.log("data:", data)
+                })
+                .catch(({ response }) => {
+                    const message = error?.response?.data?.error || error.message || "Unknown error";
+                    toast.error(message);
+                })
+        } catch (error) {
+            console.log(error)
+        }
     }
 
 
