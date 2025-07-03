@@ -1,26 +1,27 @@
 
 import express from 'express'
 import mongoose from 'mongoose'
-import 'dotenv/config'
+import dotenv  from 'dotenv'
 import bcrypt from 'bcrypt';
+dotenv.config();
 import User from './Schema/User.js';
 import { nanoid } from 'nanoid';
 import jwt from "jsonwebtoken";
 import cors from "cors";
 import { getAuth } from "firebase-admin/auth";
 import admin from 'firebase-admin';
-import serviceAccountKey from "./blog-io-a944e-firebase-adminsdk-fbsvc-77ab4fa75f.json" assert {type: "json"};
+//import serviceAccountKey from "./blog-io-a944e-firebase-adminsdk-fbsvc-77ab4fa75f.json" assert {type: "json"};
 
 
 const server = express();
-console.log("serviceAccountKey", serviceAccountKey);
+// console.log("serviceAccountKey", serviceAccountKey);
 let PORT = 3000;
 server.use(express.json());
 server.use(cors());
 
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccountKey)
-})
+// admin.initializeApp({
+//     credential: admin.credential.cert(serviceAccountKey)
+// })
 
 let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; // regex for email
 let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/; // regex for password
@@ -30,13 +31,11 @@ mongoose.connect(process.env.db_location, { autoIndex: true })
 let generateUsername = (email) => {
     let username = email.split("@")[0];
     let isUsernameExists = User.exists({ "personal_info.username": username }).then((result) => result);
-
     isUsernameExists ? username += nanoid().substring(0, 3) : "";
     return username;
 }
 
 let formatDatatoSend = (user) => {
-
     const access_token = jwt.sign({ id: user._id }, process.env.SECRET_ACCESS_KEY)
 
     return {
