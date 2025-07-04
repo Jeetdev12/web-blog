@@ -1,8 +1,7 @@
-POST http://localhost:3000/signin
-Content-Type: application/json
 
-{
-     "email": "man@gmail.com",
-    "password": "Kunaal@123"
-   
-}
+
+GET http://localhost:1000/get-uplaod-
+
+
+
+

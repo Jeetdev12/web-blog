@@ -11,7 +11,7 @@ import cors from "cors";
 import { getAuth } from "firebase-admin/auth";
 import admin from 'firebase-admin';
 //import serviceAccountKey from "./blog-io-a944e-firebase-adminsdk-fbsvc-77ab4fa75f.json" assert {type: "json"};
- import aws from 'sdk'
+ import aws from 'aws-sdk'
 
 const server = express();
 // console.log("serviceAccountKey", serviceAccountKey);
@@ -30,7 +30,7 @@ mongoose.connect(process.env.db_location, { autoIndex: true })
 
 // Connnecting aws 
 
-const s3 = new aws.s3(
+const s3 = new aws.S3(
     {
         region:'eu-noth-1',
         accessKeyId : process.env.AWS_ACCESS_KEY,
@@ -38,7 +38,19 @@ const s3 = new aws.s3(
     }
 )
 
-let generateUsername = (email) => {
+const generateUploadURL = async()=>{
+    const date = new Date();
+    const  imageName = `${nanoid}-${date.getTime()}.jpeg`
+
+  return  await s3.getSignedUrlPromise('putObject',{
+        Bucket: 'blogy-blogging-website',
+        Key:imageName,
+        Expires:1000,
+        ContentType: 'image/jpeg'
+    })
+}
+
+let generateUsername =  (email) => {
     let username = email.split("@")[0];
     let isUsernameExists = User.exists({ "personal_info.username": username }).then((result) => result);
     isUsernameExists ? username += nanoid().substring(0, 3) : "";
@@ -55,6 +67,15 @@ let formatDatatoSend = (user) => {
         fullname: user.personal_info.fullname
     }
 }
+
+// upload image url route 
+
+server.get('/get-uplaod-url', (req,res)=>{
+    generateUploadURL().then(url=>res.status(200).json({"uplaodUrl":url})).catch(error=>{
+        console.log(error.message);
+        return res.status(500).json({error:error.message});
+    })
+})
 
 server.post("/signup", (req, res) => {
 
