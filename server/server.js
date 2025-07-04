@@ -11,11 +11,11 @@ import cors from "cors";
 import { getAuth } from "firebase-admin/auth";
 import admin from 'firebase-admin';
 //import serviceAccountKey from "./blog-io-a944e-firebase-adminsdk-fbsvc-77ab4fa75f.json" assert {type: "json"};
-
+ import aws from 'sdk'
 
 const server = express();
 // console.log("serviceAccountKey", serviceAccountKey);
-let PORT = 3000;
+let PORT = 3000; 
 server.use(express.json());
 server.use(cors());
 
@@ -27,6 +27,16 @@ let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; // regex for e
 let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/; // regex for password
 
 mongoose.connect(process.env.db_location, { autoIndex: true })
+
+// Connnecting aws 
+
+const s3 = new aws.s3(
+    {
+        region:'eu-noth-1',
+        accessKeyId : process.env.AWS_ACCESS_KEY,
+        secretAccessKey: process.env.SECRET_ACCESS_KEY
+    }
+)
 
 let generateUsername = (email) => {
     let username = email.split("@")[0];
