@@ -1,6 +1,6 @@
 
 
-GET http://localhost:1000/get-uplaod-
+GET http://localhost:3000/get-uplaod-url
 
 
 

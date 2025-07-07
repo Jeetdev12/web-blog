@@ -70,12 +70,12 @@ let formatDatatoSend = (user) => {
 
 // upload image url route 
 
-server.get('/get-uplaod-url', (req,res)=>{
-    generateUploadURL().then(url=>res.status(200).json({"uplaodUrl":url})).catch(error=>{
-        console.log(error.message);
-        return res.status(500).json({error:error.message});
+    server.get('/get-upload-url', (req,res)=>{
+        generateUploadURL().then(url=>res.status(200).json({"uplaodUrl":url})).catch(error=>{
+            console.log(error.message);
+            return res.status(500).json({error:error.message});
+        })
     })
-})
 
 server.post("/signup", (req, res) => {
 
@@ -143,8 +143,6 @@ server.post("/signin", (req, res) => {
         } else {
             return res.status(403).json({ "error": "Account was created using google . Try login with google . " })
         }
-
-
 
     }).catch((err) => {
         console.log(err.message);
