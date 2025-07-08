@@ -10,7 +10,7 @@ export const uploadImage = async (img) => {
         await axios({
             method: 'PUT',
             url: uploadUrl,
-            headers: { 'Content-Type':'multipart/form-data' },
+            headers: { 'Content-Type':'imageFile.type' },
             data: img
         }).then(() => {
             imageUrl = uploadUrl.split('?')[0];     

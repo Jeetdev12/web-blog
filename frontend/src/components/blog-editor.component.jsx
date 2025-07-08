@@ -11,7 +11,7 @@ const BlogEditor = () => {
     const handleBannerUpload = async (e) => {
         console.log("handle...")
         let img = e.target.files[0];
-        console.log("img:", img)
+        console.log("img:", img);
         if (img) {
             await uploadImage(img).then((url) => {
                 if (url) {
