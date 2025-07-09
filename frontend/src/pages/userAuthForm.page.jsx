@@ -27,7 +27,7 @@ const UserAuthForm = ({ type }) => {
                     setUserAuth(data);
                     console.log("data:", data)
                 })
-                .catch(({ response }) => {
+                .catch(({ error }) => {
                     const message = error?.response?.data?.error || error.message || "Unknown error";
                     toast.error(message);
                 })
