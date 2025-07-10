@@ -32,7 +32,7 @@ mongoose.connect(process.env.db_location, { autoIndex: true })
 
 const s3 = new aws.S3(
     {
-        region:'eu-noth-1',
+        region:'eu-north-1',
         accessKeyId : process.env.AWS_ACCESS_KEY,
         secretAccessKey: process.env.SECRET_ACCESS_KEY
     }
@@ -53,8 +53,9 @@ const generateUploadURL = async()=>{
 let generateUsername =  (email) => {
     let username = email.split("@")[0];
     let isUsernameExists = User.exists({ "personal_info.username": username }).then((result) => result);
-    isUsernameExists ? username += nanoid().substring(0, 3) : "";
-    return username;
+   username=  isUsernameExists ? username + nanoid().substring(0, 3) : "";
+    let fileName= `${username}.jpeg`;
+    return fileName;
 }
 
 let formatDatatoSend = (user) => {
@@ -71,7 +72,7 @@ let formatDatatoSend = (user) => {
 // upload image url route 
 
     server.get('/get-upload-url', (req,res)=>{
-        generateUploadURL().then(url=>res.status(200).json({"uplaodUrl":url})).catch(error=>{
+        generateUploadURL().then(url=>res.status(200).json({"uploadUrl":url})).catch(error=>{
             console.log(error.message);
             return res.status(500).json({error:error.message});
         })
