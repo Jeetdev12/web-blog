@@ -3,17 +3,25 @@ import logo from "../imgs/logo.png"
 import AnimationWrapper from "../common/page-animation";
 import defaultBanner from "../imgs/blog banner.png"
 import { uploadImage } from "../common/aws";
-import { useContext, useRef } from "react";
+import { useContext, useEffect } from "react";
 import { Toaster, toast } from 'react-hot-toast'
 import { EditorContext } from "../pages/editor.pages";
+import EditorJS from '@editorjs/editorjs'
 
 
 const BlogEditor = () => {
-    let blogBannerRef = useRef();
 
     const {blog,blog: {banner, title, des,content,tags},setBlog } = useContext(EditorContext)
 
     // console.log(blog)
+
+    useEffect(()=>{
+         let editor = new EditorJS({
+            holderId:"textEditor",
+            data:'',
+            placeholder:"Write your blog here"
+         })
+    },[])
 
     const handleBannerUpload = async (e) => {
 
@@ -106,6 +114,8 @@ const BlogEditor = () => {
                             onKeyDown={handleKeyDown}
                             onChange={handleTitleChange}
                         ></textarea>
+                        <hr className="w-full opacity-10"/>
+                        <div id="textEditor"></div>
                     </div>
                 </section>
             </AnimationWrapper>
