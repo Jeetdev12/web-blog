@@ -7,6 +7,7 @@ import { useContext, useEffect } from "react";
 import { Toaster, toast } from 'react-hot-toast'
 import { EditorContext } from "../pages/editor.pages";
 import EditorJS from '@editorjs/editorjs'
+import { tools } from "./tools.component";
 
 
 const BlogEditor = () => {
@@ -19,6 +20,7 @@ const BlogEditor = () => {
          let editor = new EditorJS({
             holderId:"textEditor",
             data:'',
+            tools:tools,
             placeholder:"Write your blog here"
          })
     },[])
