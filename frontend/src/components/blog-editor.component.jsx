@@ -18,7 +18,7 @@ const BlogEditor = () => {
 
     useEffect(()=>{
          let editor = new EditorJS({
-            holderId:"textEditor",
+            holder:"textEditor",
             data:'',
             tools:tools,
             placeholder:"Write your blog here"
