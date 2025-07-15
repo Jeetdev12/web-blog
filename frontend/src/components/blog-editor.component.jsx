@@ -12,17 +12,18 @@ import { tools } from "./tools.component";
 
 const BlogEditor = () => {
 
-    const {blog,blog: {banner, title, des,content,tags},setBlog } = useContext(EditorContext)
+    const {blog,blog: {banner, title, des,content,tags},setBlog ,textEditor,setTextEditor} = useContext(EditorContext)
 
     // console.log(blog)
 
     useEffect(()=>{
-         let editor = new EditorJS({
+
+         setTextEditor(new EditorJS({
             holder:"textEditor",
             data:'',
             tools:tools,
             placeholder:"Write your blog here"
-         })
+         }))
     },[])
 
     const handleBannerUpload = async (e) => {
@@ -58,15 +59,37 @@ const BlogEditor = () => {
         const input = e.target;
         input.style.height = 'auto';
         input.style.height = input.scrollHeight + "px";
-             console.log(input.value)
         setBlog({...blog,title:input.value})
     }
 
     const handleError = (e)=>{
         let img = e.target;
-        console.log(img)
         img.src= defaultBanner;
     }
+   
+    const handlePublish= (e)=>{
+        e.preventDefault();
+        if(!banner.length){
+            return toast.error("Upload banner to publish it.")
+        }
+
+        if(!title.length){
+            return toast.error("Enter title of your blog to publish it ...")
+        }
+
+        if(textEditor.isReady){
+            textEditor.save().then((data)=>{
+                if(data.blocks.length){
+                    setBlog({...blog,content:data});
+                    setEditorState("publish")
+                }else{
+                    return toast.error("Write something in your blog to publish it ")
+                }
+            })
+        }
+    }
+
+
     return (
         <>
             <nav className="navbar" >
@@ -80,7 +103,7 @@ const BlogEditor = () => {
                 </p>
 
                 <div className="flex gap-4 ml-auto">
-                    <button className="btn-dark py-2">
+                    <button className="btn-dark py-2" onClick={handlePublish}>
                         Publish
                     </button>
                     <button className="btn-light py-2">

@@ -19,11 +19,13 @@ let Editor = () => {
     const [blog, setBlog] = useState(blogStructure)
 
     //editor will allow only if signed in 
-    let { userAuth: { access_token } } = useContext(UserContext)
+    let { userAuth: { access_token } } = useContext(UserContext);
     let [editorState, setEditorState] = useState("editor");
+    let [textEditor , setTextEditor] = useState({isReady:false});
+
 
     return (
-        <EditorContext.Provider value={{blog, setBlog ,editorState ,setEditorState}}>
+        <EditorContext.Provider value={{blog, setBlog ,editorState ,setEditorState,textEditor,setTextEditor}}>
             {
                 access_token === null ? <Navigate to="/signin" />
                     : editorState == "editor" ? <BlogEditor /> : < PublishForm />
