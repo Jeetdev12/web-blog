@@ -12,7 +12,7 @@ import { tools } from "./tools.component";
 
 const BlogEditor = () => {
 
-    const {blog,blog: {banner, title, des,content,tags},setBlog ,textEditor,setTextEditor} = useContext(EditorContext)
+    const {blog,blog: {banner, title, des,content,tags},setBlog ,editorState,setEditorState,textEditor,setTextEditor} = useContext(EditorContext)
 
     // console.log(blog)
 
