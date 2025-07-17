@@ -12,19 +12,19 @@ import { tools } from "./tools.component";
 
 const BlogEditor = () => {
 
-    const {blog,blog: {banner, title, des,content,tags},setBlog ,editorState,setEditorState,textEditor,setTextEditor} = useContext(EditorContext)
+    const { blog, blog: { banner, title, des, content, tags }, setBlog, editorState, setEditorState, textEditor, setTextEditor } = useContext(EditorContext)
 
     // console.log(blog)
 
-    useEffect(()=>{
+    useEffect(() => {
 
-         setTextEditor(new EditorJS({
-            holder:"textEditor",
-            data:'',
-            tools:tools,
-            placeholder:"Write your blog here"
-         }))
-    },[])
+        setTextEditor(new EditorJS({
+            holder: "textEditor",
+            data: content,
+            tools: tools,
+            placeholder: "Write your blog here"
+        }))
+    }, [])
 
     const handleBannerUpload = async (e) => {
 
@@ -41,7 +41,7 @@ const BlogEditor = () => {
 
                     // blogBannerRef.current.src = url;
 
-                    setBlog({...blog, banner:url})
+                    setBlog({ ...blog, banner: url })
                 }
             }).catch((error) => {
                 toast.dismiss(loadingToast);
@@ -59,30 +59,30 @@ const BlogEditor = () => {
         const input = e.target;
         input.style.height = 'auto';
         input.style.height = input.scrollHeight + "px";
-        setBlog({...blog,title:input.value})
+        setBlog({ ...blog, title: input.value })
     }
 
-    const handleError = (e)=>{
+    const handleError = (e) => {
         let img = e.target;
-        img.src= defaultBanner;
+        img.src = defaultBanner;
     }
-   
-    const handlePublish= (e)=>{
+
+    const handlePublish = (e) => {
         e.preventDefault();
-        if(!banner.length){
+        if (!banner.length) {
             return toast.error("Upload banner to publish it.")
         }
 
-        if(!title.length){
+        if (!title.length) {
             return toast.error("Enter title of your blog to publish it ...")
         }
 
-        if(textEditor.isReady){
-            textEditor.save().then((data)=>{
-                if(data.blocks.length){
-                    setBlog({...blog,content:data});
+        if (textEditor.isReady) {
+            textEditor.save().then((data) => {
+                if (data.blocks.length) {
+                    setBlog({ ...blog, content: data });
                     setEditorState("publish")
-                }else{
+                } else {
                     return toast.error("Write something in your blog to publish it ")
                 }
             })
@@ -97,9 +97,9 @@ const BlogEditor = () => {
                     <img src={logo} className="flex-none w-12" />
                 </Link>
 
-         {/* //removed max-md:hidden */}
-                <p className=" text-black line-clamp-1 w-full"> 
-                    {title.length ? title: "New Blog"}
+                {/* //removed max-md:hidden */}
+                <p className=" text-black line-clamp-1 w-full">
+                    {title.length ? title : "New Blog"}
                 </p>
 
                 <div className="flex gap-4 ml-auto">
@@ -122,7 +122,7 @@ const BlogEditor = () => {
                                 < img
                                     src={banner}
                                     onError={handleError}
-                                    />
+                                />
                                 <input
                                     id="uploadBanner"
                                     type="file"
@@ -133,13 +133,14 @@ const BlogEditor = () => {
                             </label>
                         </div>
                         <textarea
+                           defaultValue={title}
                             placeholder="Blog title "
                             className="mt-10 text-4xl font-medium w-full h-20 outline-none resize-none leading-tight 
                         placeholder:opacity-40  "
                             onKeyDown={handleKeyDown}
                             onChange={handleTitleChange}
                         ></textarea>
-                        <hr className="w-full opacity-10"/>
+                        <hr className="w-full opacity-10" />
                         <div id="textEditor"></div>
                     </div>
                 </section>
