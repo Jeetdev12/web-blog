@@ -3,8 +3,10 @@ import AnimationWrapper from "../common/page-animation";
 import { useContext } from "react";
 import { EditorContext } from "../pages/editor.pages";
 
+
+
 const PublishForm = () => {
-    const { blog: { banner,title }, setEditorState } = useContext(EditorContext)
+    const { blog: { banner,title ,des}, setEditorState } = useContext(EditorContext)
     const handleCloseEvent = () => {
         setEditorState("editor");
     }
@@ -23,6 +25,7 @@ const PublishForm = () => {
                         <img src={banner} />
                     </div>
                     <h1 className="text-4xl font-medium mt-2 leading-tight line-clamp-2">{title}</h1>
+                    <p className="font-gelasio line-clamp-2 text-xl leading-7 mt-4">{des}</p>
                 </div>
             </section>
         </AnimationWrapper>
