@@ -12,10 +12,9 @@ import { getAuth } from "firebase-admin/auth";
 import admin from 'firebase-admin';
 //import serviceAccountKey from "./blog-io-a944e-firebase-adminsdk-fbsvc-77ab4fa75f.json" assert {type: "json"};
  import aws from 'aws-sdk'
-
+let PORT = process.env.PORT
 const server = express();
 // console.log("serviceAccountKey", serviceAccountKey);
-let PORT = 3000; 
 server.use(express.json());
 server.use(cors());
 
