@@ -10,6 +10,34 @@ import jwt from "jsonwebtoken";
 import cors from "cors";
 import { getAuth } from "firebase-admin/auth";
 import admin from 'firebase-admin';
+
+
+
+
+const cors = require('cors');
+
+app.use(cors({
+  origin: 'https://your-frontend-name.vercel.app',
+  credentials: true, // if using cookies
+}));
+
+
+
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://your-frontend-name.vercel.app'
+];
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true,
+}));
+
+
+
+
+
+
 //import serviceAccountKey from "./blog-io-a944e-firebase-adminsdk-fbsvc-77ab4fa75f.json" assert {type: "json"};
  import aws from 'aws-sdk'
 let PORT = process.env.PORT
