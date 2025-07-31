@@ -8,7 +8,7 @@ import Tag from "./tags.component";
 
 const PublishForm = () => {
     const characterLimit = 200;
-    const tagLimit =10;
+    const tagLimit = 10;
     const { blog, blog: { banner, tags, title, des }, setEditorState, setBlog } = useContext(EditorContext)
     const handleCloseEvent = () => {
         setEditorState("editor");
@@ -28,19 +28,19 @@ const PublishForm = () => {
             e.preventDefault();
         }
     }
-    const handleKeyDownt = (e)=>{
-        if(e.keyCode == 13 || e.keyCode == 188){
+    const handleKeyDownt = (e) => {
+        if (e.keyCode == 13 || e.keyCode == 188) {
             e.preventDefault();
 
-              let tag = e.target.value; 
-              console.log(tag)
-              
-              if(tags.lenght<tagLimit){
-                if(!tags.includes(tag)&& tag.length){
-                     setBlog({...blog,tags:[...tags,tag]})
+            let tag = e.target.value;
+            console.log(tag)
+
+            if (tags.lenght < tagLimit) {
+                if (!tags.includes(tag) && tag.length) {
+                    setBlog({ ...blog, tags: [...tags, tag] })
                 }
-              }
-              e.target.value = "";
+            }
+            e.target.value = "";
         }
     }
     return (
@@ -75,10 +75,10 @@ const PublishForm = () => {
                 </div>
                 <div className="relative input-box pl-2 py-2 pb-4">
                     <input className="sticky input-box bg-white top-0 left-0 pl-4 mb-3 focus:bg-white" onKeyDown={handleKeyDownt} />
-
-                    {tags.map((tag, i) => {
-                        <Tag tag={tag} key={i} />
-                    })
+                    {
+                        tags.map((tag, i) => {
+                            <Tag tag={tag} key={i} />
+                        })
                     }
 
                 </div>

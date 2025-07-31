@@ -1,7 +1,7 @@
 
 import express from 'express'
 import mongoose from 'mongoose'
-import dotenv  from 'dotenv'
+import dotenv from 'dotenv'
 import bcrypt from 'bcrypt';
 dotenv.config();
 import User from './Schema/User.js';
@@ -13,42 +13,31 @@ import admin from 'firebase-admin';
 
 
 
-
-const cors = require('cors');
-
-app.use(cors({
-  origin: 'https://your-frontend-name.vercel.app',
-  credentials: true, // if using cookies
-}));
-
-
-
-const allowedOrigins = [
-  'http://localhost:3000',
-  'https://your-frontend-name.vercel.app'
-];
-
-app.use(cors({
-  origin: allowedOrigins,
-  credentials: true,
-}));
-
-
-
-
-
-
 //import serviceAccountKey from "./blog-io-a944e-firebase-adminsdk-fbsvc-77ab4fa75f.json" assert {type: "json"};
- import aws from 'aws-sdk'
+
+
+import aws from 'aws-sdk'
 let PORT = process.env.PORT
 const server = express();
+
 // console.log("serviceAccountKey", serviceAccountKey);
-server.use(express.json());
-server.use(cors());
+
+const allowedOrigins = [
+    'http://localhost:5173','http://localhost:3000',
+    'https://your-frontend-name.vercel.app'
+];
+
+server.use(cors({
+    origin: allowedOrigins,
+    credentials: true,
+}));
 
 // admin.initializeApp({
 //     credential: admin.credential.cert(serviceAccountKey)
 // })
+
+server.use(express.json());
+
 
 let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; // regex for email
 let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/; // regex for password
@@ -59,29 +48,29 @@ mongoose.connect(process.env.db_location, { autoIndex: true })
 
 const s3 = new aws.S3(
     {
-        region:'eu-north-1',
-        accessKeyId : process.env.AWS_ACCESS_KEY,
+        region: 'eu-north-1',
+        accessKeyId: process.env.AWS_ACCESS_KEY,
         secretAccessKey: process.env.SECRET_ACCESS_KEY
     }
 )
 
-const generateUploadURL = async()=>{
+const generateUploadURL = async () => {
     const date = new Date();
-    const  imageName = `${nanoid}-${date.getTime()}.jpeg`
+    const imageName = `${nanoid}-${date.getTime()}.jpeg`
 
-  return  await s3.getSignedUrlPromise('putObject',{
+    return await s3.getSignedUrlPromise('putObject', {
         Bucket: 'blogy-blogging-website',
-        Key:imageName,
-        Expires:1000,
+        Key: imageName,
+        Expires: 1000,
         ContentType: 'image/jpeg'
     })
 }
 
-let generateUsername =  (email) => {
+let generateUsername = (email) => {
     let username = email.split("@")[0];
     let isUsernameExists = User.exists({ "personal_info.username": username }).then((result) => result);
-   username=  isUsernameExists ? username + nanoid().substring(0, 3) : "";
-    let fileName= `${username}.jpeg`;
+    username = isUsernameExists ? username + nanoid().substring(0, 3) : "";
+    let fileName = `${username}.jpeg`;
     return fileName;
 }
 
@@ -98,12 +87,12 @@ let formatDatatoSend = (user) => {
 
 // upload image url route 
 
-    server.get('/get-upload-url', (req,res)=>{
-        generateUploadURL().then(url=>res.status(200).json({"uploadUrl":url})).catch(error=>{
-            console.log(error.message);
-            return res.status(500).json({error:error.message});
-        })
+server.get('/get-upload-url', (req, res) => {
+    generateUploadURL().then(url => res.status(200).json({ "uploadUrl": url })).catch(error => {
+        console.log(error.message);
+        return res.status(500).json({ error: error.message });
     })
+})
 
 server.post("/signup", (req, res) => {
 
@@ -149,6 +138,7 @@ server.post("/signup", (req, res) => {
 server.post("/signin", (req, res) => {
 
     let { email, password } = req.body;
+    console.log(email,password)
 
     User.findOne({ "personal_info.email": email }).then((user) => {
 

@@ -26,11 +26,11 @@ const UserAuthForm = ({ type }) => {
                     storeInSession("user", JSON.stringify(data));
                     setUserAuth(data);
                     console.log("data:", data)
-                })
-                .catch(({ error }) => {
+                }).catch((error) => {
                     const message = error?.response?.data?.error || error.message || "Unknown error";
                     toast.error(message);
-                })
+                });
+
         } catch (error) {
             console.log(error)
         }
