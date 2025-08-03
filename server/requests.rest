@@ -1,7 +1,19 @@
+# POST http://localhost:3000/signup
+# Content-Type: application/json
+
+# {
+#      "fullname":"manjeet",
+#     "email" : "john@gmail.com",
+#     "password": "Manjeet@1234"
+# }
 
 
-GET http://localhost:3000/get-uplaod-url
 
 
-
+POST http://localhost:3000/create-blog
+Content-Type: application/json
+ Authorization: 'Bearer asdcfsefsvcfvcdff'
+{
+  "title":"Blog is here.....111"
+}
 

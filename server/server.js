@@ -23,7 +23,7 @@ const server = express();
 // console.log("serviceAccountKey", serviceAccountKey);
 
 const allowedOrigins = [
-    'http://localhost:5173','http://localhost:3000',
+    'http://localhost:5173', 'http://localhost:3000',
     'https://your-frontend-name.vercel.app'
 ];
 
@@ -66,6 +66,34 @@ const generateUploadURL = async () => {
     })
 }
 
+// const verifconst jwt = require("jsonwebtoken");
+
+
+
+const verifyJWT = (req, res, next) => {
+
+    console.log("verifying token ...")
+    const authHeader = req.headers['authorization'];
+    console.log(authHeader);
+    
+    const token = authHeader && authHeader.split(" ")[1]
+
+    if (!token) {
+        return res.status(401).json({ error: "No access token " })
+    }
+
+    jwt.verify(token, process.env.SECRET_ACCESS_KEY, (err, user) => {
+        if (err) {
+            return res.status(403).json({ error: "Access token is invalid" })
+        }
+
+        req.user = user.id;
+             next()
+    })
+}
+
+
+
 let generateUsername = (email) => {
     let username = email.split("@")[0];
     let isUsernameExists = User.exists({ "personal_info.username": username }).then((result) => result);
@@ -84,6 +112,11 @@ let formatDatatoSend = (user) => {
         fullname: user.personal_info.fullname
     }
 }
+
+server.use((req, res, next) => {
+  console.log(`[${req.method}] ${req.url}`);
+  next();
+});
 
 // upload image url route 
 
@@ -138,7 +171,7 @@ server.post("/signup", (req, res) => {
 server.post("/signin", (req, res) => {
 
     let { email, password } = req.body;
-    console.log(email,password)
+    console.log(email, password)
 
     User.findOne({ "personal_info.email": email }).then((user) => {
 
@@ -212,6 +245,11 @@ server.post("/google-auth", async (req, res) => {
         })
 })
 
+
+server.post("/create-blog", verifyJWT, (req, res) => {
+
+    return res.json.status(200)(req.body)
+})
 
 
 server.listen(PORT, () => {
