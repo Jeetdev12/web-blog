@@ -13,7 +13,14 @@
 POST http://localhost:3000/create-blog
 Content-Type: application/json
  Authorization: 'Bearer asdcfsefsvcfvcdff'
+ 
 {
-  "title":"Blog is here.....111"
+  "title":"Blog is here.....111",
+  "banner":"https://example.com",
+  "des":"This is first blog",
+  "content":{
+    "blocks":[1,2],
+  },
+  "tags":["tag1","tag2"],
 }
 

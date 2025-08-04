@@ -246,9 +246,36 @@ server.post("/google-auth", async (req, res) => {
 })
 
 
+
 server.post("/create-blog", verifyJWT, (req, res) => {
 
-    return res.json.status(200)(req.body)
+    let authorId = user.id;
+
+    let {title, des , banner, tags, content, draft} = req.body;
+
+    if(!title.length){
+        return res.status(403).json({error:"You must provide a title to publish the blog "})
+    }
+
+    if(!des.length || des.length>200){
+        return res.status(403).json({error:"You must provide blog banner to publish it "});
+    }
+
+    if(!banner.length){
+        return res.status(403).json({error:"You must provide banner to publish it "})
+    }
+    if(content.blocks.length){
+        return res.status(403).json({error:"You must be some blog content to publish it "})
+    }
+    if(tags.length || tags.length>10){
+        return res.status(403).json({error:"Provides tags to publish it "})
+    }
+
+    tags = tags.map(tag=>tag.toLowerCase());
+
+    let blogId = title.replace(/[^a-zA-Z0-9]/g,' ').replace(/\s+/g,"-").trim()+nanoid();
+   console.log(blogId)
+    return res.json.status(200)({message:"Successfull"})
 })
 
 
