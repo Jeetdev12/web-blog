@@ -9,7 +9,6 @@ import { nanoid } from 'nanoid';
 import jwt from "jsonwebtoken";
 import cors from "cors";
 import { getAuth } from "firebase-admin/auth";
-import admin from 'firebase-admin';
 
 
 
